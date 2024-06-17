@@ -1,50 +1,48 @@
 resource "aws_vpc" "infra_aws_vpc" {
-    cidr_block = var.vpc_cidr
+  cidr_block = var.vpc_cidr
 
-    tags = {
-        Name = "infra-aws-vpc"
-    }
+  tags = {
+    Name = "infra-aws-vpc"
+  }
 }
 resource "aws_internet_gateway" "infra_aws_igw" {
-    vpc_id = aws_vpc.infra_aws_vpc.id
+  vpc_id = aws_vpc.infra_aws_vpc.id
 
-    tags = {
-        Name = "infra-aws-igw"
-    }
+  tags = {
+    Name = "infra-aws-igw"
+  }
 }
 
 data "aws_availability_zones" "available" {
-    state = "available"
+  state = "available"
 }
 
 resource "aws_subnet" "public_subnet" {
-    count             = length(var.public_subnet_cidrs)
-    vpc_id            = aws_vpc.infra_aws_vpc.id
-    cidr_block        = var.public_subnet_cidrs[count.index]
-    availability_zone = data.aws_availability_zones.available.names[count.index]
-    map_public_ip_on_launch = true
-    tags = {
-        Name = "infra-aws-public-subnet-${count.index + 1}"
-         
-    }
+  count                   = length(var.public_subnet_cidrs)
+  vpc_id                  = aws_vpc.infra_aws_vpc.id
+  cidr_block              = var.public_subnet_cidrs[count.index]
+  availability_zone       = data.aws_availability_zones.available.names[count.index]
+  map_public_ip_on_launch = true
+  tags = {
+    Name = "infra-aws-public-subnet-${count.index + 1}"
+  }
 }
 
 
 resource "aws_subnet" "private_subnet" {
-    count             = length(var.public_subnet_cidrs)
-    vpc_id            = aws_vpc.infra_aws_vpc.id
-    cidr_block        = var.private_subnet_cidrs[count.index]
-    availability_zone = data.aws_availability_zones.available.names[count.index]
-    tags = {
-        Name = "infra-aws-private-subnet-${count.index + 1}"
-         
-    }
+  count             = length(var.public_subnet_cidrs)
+  vpc_id            = aws_vpc.infra_aws_vpc.id
+  cidr_block        = var.private_subnet_cidrs[count.index]
+  availability_zone = data.aws_availability_zones.available.names[count.index]
+  tags = {
+    Name = "infra-aws-private-subnet-${count.index + 1}"
+  }
 }
 
 resource "aws_eip" "nat_eip" {
-  count    = length(var.public_subnet_cidrs)
-  domain   = "vpc"
-    tags = {
+  count  = length(var.public_subnet_cidrs)
+  domain = "vpc"
+  tags = {
     Name = "infra-aws-nat-eip-${count.index}"
   }
   depends_on = [aws_internet_gateway.infra_aws_igw]
@@ -55,7 +53,7 @@ resource "aws_nat_gateway" "infra_aws_nat" {
   allocation_id = aws_eip.nat_eip[count.index].id
   subnet_id     = aws_subnet.public_subnet[count.index].id
 
- tags = {
+  tags = {
     Name = "infra-aws-nat-gateway-${count.index}"
   }
 
@@ -64,14 +62,14 @@ resource "aws_nat_gateway" "infra_aws_nat" {
   depends_on = [aws_internet_gateway.infra_aws_igw]
 }
 resource "aws_route_table" "public_route_table" {
-    vpc_id = aws_vpc.infra_aws_vpc.id
-    route {
-        cidr_block = var.route_cidr_range
-        gateway_id = aws_internet_gateway.infra_aws_igw.id
-    }
-    tags = {
-        Name = "infra-aws-public-route-table"
-    }
+  vpc_id = aws_vpc.infra_aws_vpc.id
+  route {
+    cidr_block = var.route_cidr_range
+    gateway_id = aws_internet_gateway.infra_aws_igw.id
+  }
+  tags = {
+    Name = "infra-aws-public-route-table"
+  }
 }
 resource "aws_route_table_association" "public_rta_assc" {
   count          = length(var.public_subnet_cidrs)
@@ -81,15 +79,15 @@ resource "aws_route_table_association" "public_rta_assc" {
 
 
 resource "aws_route_table" "private_route_table" {
-    count = length(var.private_subnet_cidrs)
-    vpc_id = aws_vpc.infra_aws_vpc.id
-    route {
-        cidr_block = var.route_cidr_range
-        nat_gateway_id = aws_nat_gateway.infra_aws_nat[count.index].id
-    }
-    tags = {
-        Name = "infra-aws-private-route-table"
-    }
+  count  = length(var.private_subnet_cidrs)
+  vpc_id = aws_vpc.infra_aws_vpc.id
+  route {
+    cidr_block     = var.route_cidr_range
+    nat_gateway_id = aws_nat_gateway.infra_aws_nat[count.index].id
+  }
+  tags = {
+    Name = "infra-aws-private-route-table"
+  }
 }
 resource "aws_route_table_association" "private_rta_assc" {
   count          = length(var.private_subnet_cidrs)
