@@ -23,7 +23,6 @@ resource "aws_subnet" "public_subnet" {
     cidr_block        = var.public_subnet_cidrs[count.index]
     availability_zone = data.aws_availability_zones.available.names[count.index]
     map_public_ip_on_launch = true
-    depends_on = [aws_internet_gateway.infra_aws_igw]
     tags = {
         Name = "infra-aws-public-subnet-${count.index + 1}"
          
