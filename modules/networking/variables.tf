@@ -23,7 +23,7 @@ variable "region" {
 }
 
 variable "route_cidr_range" {
-    type = string
-    description = "CIDR range for the route table"
-    default = "0.0.0.0/0"
+  type        = string
+  description = "CIDR range for the route table"
+  default     = "0.0.0.0/0"
 }
