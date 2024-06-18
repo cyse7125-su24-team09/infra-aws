@@ -13,7 +13,7 @@ variable "kms_key_usage" {
   description = "Intended use of KMS key"
 }
 
-variable "kms_customer_master_key_spec" {
-  type        = string
-  description = "Encryption algorithm of the KMS key"
-}
+# variable "kms_customer_master_key_spec" {
+#   type        = string
+#   description = "Encryption algorithm of the KMS key"
+# }
