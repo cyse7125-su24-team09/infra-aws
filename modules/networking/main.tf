@@ -25,6 +25,7 @@ resource "aws_subnet" "public_subnet" {
   map_public_ip_on_launch = true
   tags = {
     Name = "infra-aws-public-subnet-${count.index + 1}"
+
   }
 }
 
@@ -36,6 +37,7 @@ resource "aws_subnet" "private_subnet" {
   availability_zone = data.aws_availability_zones.available.names[count.index]
   tags = {
     Name = "infra-aws-private-subnet-${count.index + 1}"
+
   }
 }
 
@@ -46,6 +48,7 @@ resource "aws_eip" "nat_eip" {
     Name = "infra-aws-nat-eip-${count.index}"
   }
   depends_on = [aws_internet_gateway.infra_aws_igw]
+
 }
 
 resource "aws_nat_gateway" "infra_aws_nat" {
@@ -84,6 +87,7 @@ resource "aws_route_table" "private_route_table" {
   route {
     cidr_block     = var.route_cidr_range
     nat_gateway_id = aws_nat_gateway.infra_aws_nat[count.index].id
+
   }
   tags = {
     Name = "infra-aws-private-route-table"
