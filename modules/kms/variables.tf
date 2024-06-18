@@ -1,9 +1,9 @@
 variable "key_usage" {
-  description = "CIDR block for the VPC"
+  description = "Intended use of KMS key"
   type        = string
 }
 
 variable "customer_master_key_spec" {
-  description = "List of CIDR blocks for public subnets"
+  description = "Encryption algorithm of the KMS key"
   type        = string
 }
