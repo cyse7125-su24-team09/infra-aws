@@ -122,6 +122,6 @@ resource "aws_security_group" "eks_sg" {
   }
 
   tags = {
-    Name    = "${var.cluster_name}-eks-security-group"
+    Name = "${var.cluster_name}-eks-security-group"
   }
 }
