@@ -27,3 +27,29 @@ variable "route_cidr_range" {
   description = "CIDR range for the route table"
   default     = "0.0.0.0/0"
 }
+
+variable "cluster_name" {
+  type = string
+}
+
+variable "env" {
+  type = string
+}
+
+variable "eks_security_group_rules" {
+  description = "Security group rules for the EKS cluster"
+  type = object({
+    ingress = list(object({
+      from_port   = number
+      to_port     = number
+      protocol    = string
+      cidr_blocks = list(string)
+    }))
+    egress = list(object({
+      from_port   = number
+      to_port     = number
+      protocol    = string
+      cidr_blocks = list(string)
+    }))
+  })
+}
