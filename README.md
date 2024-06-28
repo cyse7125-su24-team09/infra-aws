@@ -1,6 +1,6 @@
 # infra-aws
 
-This repository contains the infrastructure setup for the AWS EKS cluster, VPC, and related infrastructure components required. It will bootstrap the deployment of Kubernetes resources and Helm releases on the AWS EKS cluster.
+This repository contains the infrastructure setup for the AWS EKS cluster, VPC, and related infrastructure components required. It will bootstrap the deployment of Kubernetes resources and Helm releases on the AWS EKS cluster. 
 
 
 ## Architecture
