@@ -104,3 +104,55 @@ variable "eks_node_group_disk_size" {
 variable "eks_node_group_max_unavailable" {
   type = number
 }
+
+variable "k8s_webapp_processor_namespace" {
+  description = "The k8s namespace to create in EKS cluster for cve processor webapp"
+  type        = string
+}
+
+variable "k8s_webapp_consumer_namespace" {
+  description = "The k8s namespace to create in EKS cluster for cve consumer webapp"
+  type        = string
+}
+
+variable "k8s_kafka_namespace" {
+  description = "The k8s namespace to create in EKS cluster for cve kafka"
+  type        = string
+}
+
+variable "k8s_ebs_storage_class" {
+  description = "The k8s storage class configuration for EBS CSI driver"
+  type = object({
+    name                = string
+    storage_provisioner = string
+    reclaim_policy      = string
+    volume_binding_mode = string
+    parameters = object({
+      type      = string
+      fstype    = string
+      encrypted = string
+    })
+  })
+}
+
+variable "helm_postgres_release_config" {
+  description = "Helm release configuration for bootstrapping postgres database"
+  type = object({
+    name             = string
+    repository       = string
+    chart            = string
+    version          = string
+    values_file_path = string
+  })
+}
+
+variable "helm_kafka_release_config" {
+  description = "Helm release configuration for bootstrapping kafka"
+  type = object({
+    name             = string
+    repository       = string
+    chart            = string
+    version          = string
+    values_file_path = string
+  })
+}

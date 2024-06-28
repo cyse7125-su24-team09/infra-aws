@@ -9,6 +9,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
+                cleanWs()
                 checkout scm
             }
         }
@@ -35,6 +36,9 @@ pipeline {
     post {
         always {
             cleanWs()
+
+            echo 'Removing docker containers and images...'
+            sh 'docker system prune -a -f'
         }
     }
 }

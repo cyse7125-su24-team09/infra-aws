@@ -83,6 +83,10 @@ module "eks" {
   }
 }
 
+data "aws_eks_cluster_auth" "eks_auth" {
+  name = module.eks.cluster_name
+}
+
 resource "aws_iam_role" "ebs_csi_driver_role" {
   name = "${var.cluster_name}-ebs-csi-driver-role"
   assume_role_policy = jsonencode({

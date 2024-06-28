@@ -44,3 +44,77 @@ module "eks" {
   secrets_kms_key_arn             = module.kms.eks_secrets_kms_key_arn
   ebs_kms_key_arn                 = module.kms.eks_ebs_kms_key_arn
 }
+
+provider "kubernetes" {
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_ca_certificate)
+  exec {
+    api_version = "client.authentication.k8s.io/v1beta1"
+    args        = ["eks", "get-token", "--cluster-name", var.eks_cluster_name]
+    command     = "aws"
+    env = {
+      AWS_PROFILE = var.aws_profile
+    }
+  }
+}
+
+module "k8s_storage" {
+  source            = "./modules/k8s/storage"
+  ebs_storage_class = var.k8s_ebs_storage_class
+  kms_key_arn       = module.kms.eks_ebs_kms_key_arn
+
+  depends_on = [
+    module.kms,
+    module.eks
+  ]
+}
+
+module "k8s_namespace" {
+  source                     = "./modules/k8s/namespace"
+  webapp_processor_namespace = var.k8s_webapp_processor_namespace
+  webapp_consumer_namespace  = var.k8s_webapp_consumer_namespace
+  kafka_namespace            = var.k8s_kafka_namespace
+
+  depends_on = [
+    module.eks,
+    module.k8s_storage
+  ]
+}
+
+provider "helm" {
+  kubernetes {
+    host                   = module.eks.cluster_endpoint
+    cluster_ca_certificate = base64decode(module.eks.cluster_ca_certificate)
+    exec {
+      api_version = "client.authentication.k8s.io/v1beta1"
+      args        = ["eks", "get-token", "--cluster-name", var.eks_cluster_name]
+      command     = "aws"
+      env = {
+        AWS_PROFILE = var.aws_profile
+      }
+    }
+  }
+}
+
+module "helm_postgres" {
+  source              = "./modules/helm/postgres"
+  namespace           = var.k8s_webapp_consumer_namespace
+  helm_release_config = var.helm_postgres_release_config
+
+  depends_on = [
+    module.eks,
+    module.k8s_namespace,
+    module.k8s_storage
+  ]
+}
+
+module "helm_kafka" {
+  source              = "./modules/helm/kafka"
+  namespace           = var.k8s_kafka_namespace
+  helm_release_config = var.helm_kafka_release_config
+
+  depends_on = [
+    module.eks,
+    module.k8s_namespace
+  ]
+}
