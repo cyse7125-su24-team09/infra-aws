@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'hashicorp/terraform:latest'
-            args '--entrypoint=""'
-        }
-    }
+    agent any
 
     stages {
         stage('Checkout Code') {

@@ -1,0 +1,38 @@
+fullnameOverride: cve-kafka
+
+sasl:
+  client:
+    users:
+      - your username
+    passwords:
+      - your password
+
+controller:
+  replicaCount: 3
+  podAntiAffinityPreset: soft
+  persistence:
+    enabled: true
+    size: 8Gi
+  resources:
+    limits:
+      cpu: 1
+      memory: 1024Mi
+    requests:
+      cpu: 0.5
+      memory: 512Mi
+
+provisioning:
+  enabled: true
+  topics:
+    - name: cve
+      partitions: 3
+      replicationFactor: 3
+      config:
+        min.insync.replicas: 2
+        # flush.messages: 1
+
+kraft:
+  enabled: true
+
+zookeeper:
+  enabled: false

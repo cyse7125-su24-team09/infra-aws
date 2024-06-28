@@ -1,0 +1,23 @@
+fullnameOverride: cve-postgresql
+
+auth:
+  username: your username
+  password: your password
+  database: cve
+  
+primary:
+  persistence:
+    enabled: true
+    storageClass: "ebs-sc"
+    accessModes:
+      - ReadWriteOnce
+    size: 8Gi
+    labels: 
+      app: cve-db
+  resources:
+    limits:
+      cpu: 1
+      memory: 1024Mi
+    requests:
+      cpu: 0.5
+      memory: 512Mi
