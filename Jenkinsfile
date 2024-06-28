@@ -36,9 +36,6 @@ pipeline {
     post {
         always {
             cleanWs()
-
-            echo 'Removing docker containers and images...'
-            sh 'docker system prune -a -f'
         }
     }
 }
