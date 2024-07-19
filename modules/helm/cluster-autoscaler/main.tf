@@ -1,8 +1,8 @@
 
 resource "helm_release" "cluster_autoscaler" {
-  name                = var.helm_release_config.name
-  namespace           = "kube-system"
-  chart               = var.helm_release_config.chart
+  name      = var.helm_release_config.name
+  namespace = "kube-system"
+  chart     = var.helm_release_config.chart
   values = [
     file(var.helm_release_config.values_file_path),
     yamlencode({
