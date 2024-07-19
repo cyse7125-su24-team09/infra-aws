@@ -41,6 +41,9 @@ module "eks" {
     }
     vpc-cni = {
       most_recent = true
+      configuration_values = jsonencode({
+        "enableNetworkPolicy" = "true"
+      })
     }
     aws-ebs-csi-driver = {
       most_recent              = true
