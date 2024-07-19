@@ -43,6 +43,8 @@ module "eks" {
   node_group_role_arn             = module.iam.eks_node_group_role_arn
   secrets_kms_key_arn             = module.kms.eks_secrets_kms_key_arn
   ebs_kms_key_arn                 = module.kms.eks_ebs_kms_key_arn
+  # autoscaler_namespace            = var.k8s_clusterAutoscaler_namespace
+  service_account_name = var.autoscaler_service_account_name
 }
 
 provider "kubernetes" {
@@ -116,5 +118,19 @@ module "helm_kafka" {
   depends_on = [
     module.eks,
     module.k8s_namespace
+  ]
+}
+
+module "helm_cluster_autoscaler" {
+  source                       = "./modules/helm/cluster-autoscaler"
+  cluster_name                 = var.eks_cluster_name
+  cluster_role_arn             = module.eks.cluster_autoscaler_role_arn
+  cluster_service_account_name = var.autoscaler_service_account_name
+  # namespace                    = var.k8s_clusterAutoscaler_namespace
+  helm_release_config = var.helm_cluster_autoscaler_release_config
+  github_user         = var.github_user
+  github_token        = var.github_token
+  depends_on = [
+    module.eks,
   ]
 }

@@ -17,3 +17,7 @@ output "cluster_token" {
 output "oidc_provider" {
   value = module.eks.oidc_provider
 }
+
+output "cluster_autoscaler_role_arn" {
+  value = aws_iam_role.cluster_autoscaler_role.arn
+}
