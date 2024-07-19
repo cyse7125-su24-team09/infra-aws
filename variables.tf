@@ -156,3 +156,35 @@ variable "helm_kafka_release_config" {
     values_file_path = string
   })
 }
+
+variable "helm_cluster_autoscaler_release_config" {
+  description = "Helm release configuration for bootstrapping EKS cluster autoscaler"
+  type = object({
+    name             = string
+    repository       = string
+    chart            = string
+    version          = string
+    values_file_path = string
+  })
+}
+
+# variable "k8s_clusterAutoscaler_namespace" {
+#   description = "The k8s namespace for EKS cluster autoscaler"
+#   type        = string
+# }
+
+variable "autoscaler_service_account_name" {
+  description = "The name of the service account to associate with the EKS cluster autoscaler"
+  type        = string
+  default     = "cluster-autoscaler-sa"
+}
+
+variable "github_user" {
+  description = "Github username"
+  type        = string
+}
+
+variable "github_token" {
+  description = "Github personal access token"
+  type        = string
+}

@@ -71,7 +71,9 @@ module "eks" {
       }
 
       tags = {
-        "NodeGroup" = "${var.cluster_name}-node-group"
+        "NodeGroup"                                     = "${var.cluster_name}-node-group"
+        "k8s.io/cluster-autoscaler/enabled"             = "true"
+        "k8s.io/cluster-autoscaler/${var.cluster_name}" = "owned"
       }
 
       create_iam_role = false
@@ -147,4 +149,62 @@ resource "aws_iam_role_policy" "ebs_csi_driver_kms_policy" {
 resource "aws_iam_role_policy_attachment" "ebs_csi_driver_policy_attachment" {
   role       = aws_iam_role.ebs_csi_driver_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+}
+
+resource "aws_iam_role" "cluster_autoscaler_role" {
+  name = "${var.cluster_name}-csa-role"
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Principal" : {
+          Federated = module.eks.oidc_provider_arn
+        },
+        "Action" : "sts:AssumeRoleWithWebIdentity"
+        Condition = {
+          StringEquals = {
+            "${module.eks.oidc_provider}:sub" = "system:serviceaccount:kube-system:${var.service_account_name}"
+          }
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_iam_policy" "cluster_autoscaler_policy" {
+  name = "ClusterAutoscalerPolicy"
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "autoscaling:DescribeAutoScalingGroups",
+          "autoscaling:DescribeAutoScalingInstances",
+          "autoscaling:DescribeLaunchConfigurations",
+          "autoscaling:DescribeScalingActivities",
+          "ec2:DescribeImages",
+          "ec2:DescribeInstanceTypes",
+          "ec2:DescribeLaunchTemplateVersions",
+          "ec2:GetInstanceTypesFromInstanceRequirements",
+          "eks:DescribeNodegroup"
+        ],
+        "Resource" : "*"
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "autoscaling:SetDesiredCapacity",
+          "autoscaling:TerminateInstanceInAutoScalingGroup"
+        ],
+        "Resource" : "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "attach_cluster_autoscaler_policy" {
+  role       = aws_iam_role.cluster_autoscaler_role.name
+  policy_arn = aws_iam_policy.cluster_autoscaler_policy.arn
 }

@@ -105,3 +105,13 @@ variable "node_group_disk_size" {
 variable "node_group_max_unavailable" {
   type = number
 }
+
+# variable "autoscaler_namespace" {
+#   type        = string
+#   description = "namespace of the autoscaler"
+# }
+
+variable "service_account_name" {
+  type        = string
+  description = "name of service account used in Helm chart"
+}
