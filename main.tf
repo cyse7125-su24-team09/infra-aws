@@ -128,8 +128,6 @@ module "helm_cluster_autoscaler" {
   cluster_service_account_name = var.autoscaler_service_account_name
   # namespace                    = var.k8s_clusterAutoscaler_namespace
   helm_release_config = var.helm_cluster_autoscaler_release_config
-  github_user         = var.github_user
-  github_token        = var.github_token
   depends_on = [
     module.eks,
   ]

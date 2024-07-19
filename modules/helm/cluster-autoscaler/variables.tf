@@ -20,19 +20,8 @@ variable "helm_release_config" {
   description = "Helm release configuration for bootstrapping EKS cluster autoscaler"
   type = object({
     name             = string
-    repository       = string
     chart            = string
-    version          = string
     values_file_path = string
   })
 }
 
-variable "github_user" {
-  description = "Github username"
-  type        = string
-}
-
-variable "github_token" {
-  description = "Github personal access token"
-  type        = string
-}
