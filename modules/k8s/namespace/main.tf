@@ -15,3 +15,8 @@ resource "kubernetes_namespace" "kafka_namespace" {
     name = var.kafka_namespace
   }
 }
+resource "kubernetes_namespace" "operator_namespace" {
+  metadata {
+    name = var.operator_namespace
+  }
+}
