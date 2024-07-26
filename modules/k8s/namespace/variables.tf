@@ -9,3 +9,8 @@ variable "webapp_consumer_namespace" {
 variable "kafka_namespace" {
   type = string
 }
+
+variable "operator_namespace" {
+  type = string
+  
+}

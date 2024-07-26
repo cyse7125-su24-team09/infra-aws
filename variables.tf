@@ -186,3 +186,9 @@ variable "github_token" {
   description = "Github personal access token"
   type        = string
 }
+
+variable "k8s_operator_namespace" {
+  description = "The k8s namespace to create in EKS cluster for operator"
+  type        = string
+  
+}
