@@ -190,5 +190,5 @@ variable "github_token" {
 variable "k8s_operator_namespace" {
   description = "The k8s namespace to create in EKS cluster for operator"
   type        = string
-  
+
 }
