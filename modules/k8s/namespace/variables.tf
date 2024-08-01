@@ -14,3 +14,7 @@ variable "operator_namespace" {
   type = string
 
 }
+variable "fluentbit_namespace" {
+  type    = string
+  default = "amazon-cloudwatch"
+}

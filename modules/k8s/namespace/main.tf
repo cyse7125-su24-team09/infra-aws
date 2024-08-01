@@ -20,3 +20,11 @@ resource "kubernetes_namespace" "operator_namespace" {
     name = var.operator_namespace
   }
 }
+
+resource "kubernetes_namespace" "amazon_cloudwatch" {
+
+  metadata {
+    name = var.fluentbit_namespace
+  }
+
+}

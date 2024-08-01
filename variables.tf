@@ -192,3 +192,20 @@ variable "k8s_operator_namespace" {
   type        = string
 
 }
+variable "k8s_fluentbit_namespace" {
+  description = "The k8s namespace to create in EKS cluster for fluentbit"
+  type        = string
+  default     = "amazon-cloudwatch"
+}
+
+variable "helm_fluentbit_release_config" {
+  description = "Helm release configuration for bootstrapping fluent-bit"
+  type = object({
+    name             = string
+    repository       = string
+    chart            = string
+    version          = string
+    values_file_path = string
+  })
+
+}
