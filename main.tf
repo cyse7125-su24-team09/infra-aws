@@ -125,7 +125,7 @@ module "helm_istio" {
 module "helm_monitoring_stack" {
   source    = "./modules/helm/monitoring-stack"
   namespace = module.k8s_namespace.monitoring_namespace
-
+  helm_release_config = var.helm_monitoring_stack_release_config
   depends_on = [
     module.eks,
     module.k8s_namespace,
