@@ -212,5 +212,5 @@ variable "helm_monitoring_stack_release_config" {
     chart            = string
     values_file_path = string
   })
-  
+
 }
