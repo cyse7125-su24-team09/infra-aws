@@ -20,7 +20,7 @@ resource "helm_release" "istiod" {
   repository = local.istio_helm_repo
   chart      = "istiod"
   wait       = true
-  values     = ["${file("./modules/helm/istio/values.yaml")}"]
+  values     = ["${file("./modules/helm/istio/example.values.yaml")}"]
 
   depends_on = [
     helm_release.istio_base
