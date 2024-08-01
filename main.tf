@@ -77,6 +77,7 @@ module "k8s_namespace" {
   webapp_consumer_namespace  = var.k8s_webapp_consumer_namespace
   kafka_namespace            = var.k8s_kafka_namespace
   operator_namespace         = var.k8s_operator_namespace
+  fluentbit_namespace        = var.k8s_fluentbit_namespace
   depends_on = [
     module.eks,
     module.k8s_storage
@@ -130,5 +131,18 @@ module "helm_cluster_autoscaler" {
   helm_release_config = var.helm_cluster_autoscaler_release_config
   depends_on = [
     module.eks,
+    module.k8s_namespace
   ]
+}
+
+module "helm_fluentbit" {
+  source              = "./modules/helm/fluentbit"
+  namespace           = var.k8s_fluentbit_namespace
+  helm_release_config = var.helm_fluentbit_release_config
+
+  depends_on = [
+    module.eks,
+    module.k8s_namespace
+  ]
+
 }
