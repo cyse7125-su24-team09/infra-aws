@@ -203,3 +203,14 @@ variable "github_token" {
   description = "Github personal access token"
   type        = string
 }
+
+variable "helm_monitoring_stack_release_config" {
+  description = "Helm release configuration for bootstrapping monitoring stack"
+  type = object({
+    name             = string
+    repository       = string
+    chart            = string
+    values_file_path = string
+  })
+  
+}

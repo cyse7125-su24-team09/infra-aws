@@ -35,8 +35,6 @@ primary:
   
 metrics:
   enabled: false
-  image:
-    repository: prometheuscommunity/postgres-exporter
   serviceMonitor:
     enabled: true
     namespace: monitoring
