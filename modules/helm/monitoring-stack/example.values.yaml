@@ -1,0 +1,83 @@
+prometheus:
+  enabled: true
+
+grafana:
+  enabled: true
+  adminUser: your username
+  adminPassword: your password
+
+  service:
+    type: ClusterIP
+
+dashboardProviders:
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+      - name: 'Kafka Dashboards'
+        orgId: 1
+        folder: 'Kafka'
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/kafka
+
+      - name: 'PostgreSQL Dashboards'
+        orgId: 1
+        folder: 'PostgreSQL'
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/postgresql
+
+sidecar:
+  dashboards:
+    enabled: true
+    label: grafana_dashboard
+    folders:
+      kafka: /var/lib/grafana/dashboards/kafka
+      postgresql: /var/lib/grafana/dashboards/postgresql
+
+dashboards:
+  kafka:
+    kafka-cluster-overview:
+      url: https://grafana.com/api/dashboards/7639/revisions/latest/download
+      datasource: Prometheus
+
+    kafka-topics-overview:
+      url: https://grafana.com/api/dashboards/11829/revisions/latest/download
+      datasource: Prometheus
+
+    kafka-brokers-overview:
+      url: https://grafana.com/api/dashboards/7636/revisions/latest/download
+      datasource: Prometheus
+
+    kafka-jvm-overview:
+      url: https://grafana.com/api/dashboards/7630/revisions/latest/download
+      datasource: Prometheus
+
+    kafka-consumer-overview:
+      url: https://grafana.com/api/dashboards/7645/revisions/latest/download
+      datasource: Prometheus
+
+    kafka-producer-overview:
+      url: https://grafana.com/api/dashboards/13277/revisions/latest/download
+      datasource: Prometheus
+
+  postgresql:
+    postgresql-overview:
+      url: https://grafana.com/api/dashboards/9628/revisions/latest/download
+      datasource: Prometheus
+
+    postgresql-queries:
+      url: https://grafana.com/api/dashboards/13105/revisions/latest/download
+      datasource: Prometheus
+
+    postgresql-database:
+      url: https://grafana.com/api/dashboards/13290/revisions/latest/download
+      datasource: Prometheus
+
+    postgresql-instance:
+      url: https://grafana.com/api/dashboards/11577/revisions/latest/download
+      datasource: Prometheus

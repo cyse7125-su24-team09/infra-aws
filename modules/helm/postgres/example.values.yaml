@@ -1,19 +1,22 @@
 fullnameOverride: cve-postgresql
 
 auth:
-  username: your username
+  username: your username 
   password: your password
   database: cve
   
 primary:
+  podLabels:
+    app: cve-postgresql
+    sidecar.istio.io/inject: "false"
+
   persistence:
     enabled: true
     storageClass: "ebs-sc"
     accessModes:
       - ReadWriteOnce
     size: 8Gi
-    labels: 
-      app: cve-db
+
   resources:
     limits:
       cpu: 1
@@ -21,3 +24,23 @@ primary:
     requests:
       cpu: 0.5
       memory: 512Mi
+
+  networkPolicy:
+    enabled: true
+    allowExternal: false
+    ingressNSMatchLabels:
+      "kubernetes.io/metadata.name": cve-consumer
+    ingressNSPodMatchLabels:
+      app: cve-consumer
+  
+metrics:
+  enabled: false
+  image:
+    repository: prometheuscommunity/postgres-exporter
+  serviceMonitor:
+    enabled: true
+    namespace: monitoring
+    labels:
+      release: kube-prometheus-stack
+    selector:
+      app: cve-postgresql

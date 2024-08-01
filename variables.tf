@@ -120,6 +120,11 @@ variable "k8s_kafka_namespace" {
   type        = string
 }
 
+variable "k8s_operator_namespace" {
+  description = "The k8s namespace to create in EKS cluster for cve operator"
+  type        = string
+}
+
 variable "k8s_ebs_storage_class" {
   description = "The k8s storage class configuration for EBS CSI driver"
   type = object({
@@ -166,11 +171,6 @@ variable "helm_cluster_autoscaler_release_config" {
   })
 }
 
-# variable "k8s_clusterAutoscaler_namespace" {
-#   description = "The k8s namespace for EKS cluster autoscaler"
-#   type        = string
-# }
-
 variable "autoscaler_service_account_name" {
   description = "The name of the service account to associate with the EKS cluster autoscaler"
   type        = string
@@ -190,8 +190,8 @@ variable "github_token" {
 variable "k8s_operator_namespace" {
   description = "The k8s namespace to create in EKS cluster for operator"
   type        = string
-
 }
+
 variable "k8s_fluentbit_namespace" {
   description = "The k8s namespace to create in EKS cluster for fluentbit"
   type        = string
@@ -207,5 +207,4 @@ variable "helm_fluentbit_release_config" {
     version          = string
     values_file_path = string
   })
-
 }

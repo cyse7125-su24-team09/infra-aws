@@ -99,15 +99,37 @@ provider "helm" {
   }
 }
 
-module "helm_postgres" {
-  source              = "./modules/helm/postgres"
-  namespace           = var.k8s_webapp_consumer_namespace
-  helm_release_config = var.helm_postgres_release_config
+module "helm_cluster_autoscaler" {
+  source                       = "./modules/helm/cluster-autoscaler"
+  cluster_name                 = var.eks_cluster_name
+  cluster_role_arn             = module.eks.cluster_autoscaler_role_arn
+  cluster_service_account_name = var.autoscaler_service_account_name
+  helm_release_config          = var.helm_cluster_autoscaler_release_config
+
+  depends_on = [
+    module.eks
+  ]
+}
+
+module "helm_istio" {
+  source                  = "./modules/helm/istio"
+  istio_system_namespace  = module.k8s_namespace.istio_system_namespace
+  istio_ingress_namespace = module.k8s_namespace.istio_ingress_namespace
+
+  depends_on = [
+    module.eks,
+    module.k8s_namespace
+  ]
+}
+
+module "helm_monitoring_stack" {
+  source    = "./modules/helm/monitoring-stack"
+  namespace = module.k8s_namespace.monitoring_namespace
 
   depends_on = [
     module.eks,
     module.k8s_namespace,
-    module.k8s_storage
+    module.helm_istio
   ]
 }
 
@@ -118,20 +140,23 @@ module "helm_kafka" {
 
   depends_on = [
     module.eks,
-    module.k8s_namespace
+    module.k8s_namespace,
+    module.helm_istio,
+    module.helm_monitoring_stack
   ]
 }
 
-module "helm_cluster_autoscaler" {
-  source                       = "./modules/helm/cluster-autoscaler"
-  cluster_name                 = var.eks_cluster_name
-  cluster_role_arn             = module.eks.cluster_autoscaler_role_arn
-  cluster_service_account_name = var.autoscaler_service_account_name
-  # namespace                    = var.k8s_clusterAutoscaler_namespace
-  helm_release_config = var.helm_cluster_autoscaler_release_config
+module "helm_postgres" {
+  source              = "./modules/helm/postgres"
+  namespace           = var.k8s_webapp_consumer_namespace
+  helm_release_config = var.helm_postgres_release_config
+
   depends_on = [
     module.eks,
-    module.k8s_namespace
+    module.k8s_namespace,
+    module.k8s_storage,
+    module.helm_istio,
+    module.helm_monitoring_stack
   ]
 }
 
@@ -142,7 +167,7 @@ module "helm_fluentbit" {
 
   depends_on = [
     module.eks,
-    module.k8s_namespace
+    module.k8s_namespace,
+    module.helm_istio,
   ]
-
 }
