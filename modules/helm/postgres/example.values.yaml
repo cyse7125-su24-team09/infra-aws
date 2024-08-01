@@ -25,20 +25,28 @@ primary:
       cpu: 0.5
       memory: 512Mi
 
-  networkPolicy:
-    enabled: true
-    allowExternal: false
-    ingressNSMatchLabels:
-      "kubernetes.io/metadata.name": cve-consumer
-    ingressNSPodMatchLabels:
-      app: cve-consumer
+networkPolicy:
+  enabled: true
+  allowExternal: false
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              "kubernetes.io/metadata.name": cve-consumer
+        - namespaceSelector:
+            matchLabels:
+              "kubernetes.io/metadata.name": monitoring
+        - podSelector:
+            matchLabels:
+              app: cve-consumer
+        - podSelector:
+            matchLabels:
+              app: prometheus
   
 metrics:
-  enabled: false
+  enabled: true
   serviceMonitor:
     enabled: true
     namespace: monitoring
     labels:
-      release: kube-prometheus-stack
-    selector:
-      app: cve-postgresql
+      release: kube-prometheus-stack  

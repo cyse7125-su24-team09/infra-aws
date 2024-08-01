@@ -50,4 +50,4 @@ metrics:
     labels:
       release: kube-prometheus-stack
     selector:
-      app: cve-kafka
+      app.kubernetes.io/name: kafka
