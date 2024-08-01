@@ -125,6 +125,12 @@ variable "k8s_operator_namespace" {
   type        = string
 }
 
+variable "k8s_fluentbit_namespace" {
+  description = "The k8s namespace to create in EKS cluster for fluentbit"
+  type        = string
+  default     = "amazon-cloudwatch"
+}
+
 variable "k8s_ebs_storage_class" {
   description = "The k8s storage class configuration for EBS CSI driver"
   type = object({
@@ -171,6 +177,17 @@ variable "helm_cluster_autoscaler_release_config" {
   })
 }
 
+variable "helm_fluentbit_release_config" {
+  description = "Helm release configuration for bootstrapping fluent-bit"
+  type = object({
+    name             = string
+    repository       = string
+    chart            = string
+    version          = string
+    values_file_path = string
+  })
+}
+
 variable "autoscaler_service_account_name" {
   description = "The name of the service account to associate with the EKS cluster autoscaler"
   type        = string
@@ -185,26 +202,4 @@ variable "github_user" {
 variable "github_token" {
   description = "Github personal access token"
   type        = string
-}
-
-variable "k8s_operator_namespace" {
-  description = "The k8s namespace to create in EKS cluster for operator"
-  type        = string
-}
-
-variable "k8s_fluentbit_namespace" {
-  description = "The k8s namespace to create in EKS cluster for fluentbit"
-  type        = string
-  default     = "amazon-cloudwatch"
-}
-
-variable "helm_fluentbit_release_config" {
-  description = "Helm release configuration for bootstrapping fluent-bit"
-  type = object({
-    name             = string
-    repository       = string
-    chart            = string
-    version          = string
-    values_file_path = string
-  })
 }
