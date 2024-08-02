@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: grafana-cert
+  namespace: istio-system
+spec:
+  secretName: grafana-tls
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+  commonName: grafana.pritesh-nimje.me
+  dnsNames:
+    - grafana.pritesh-nimje.me
