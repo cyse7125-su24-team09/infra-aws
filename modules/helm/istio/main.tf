@@ -20,15 +20,15 @@ resource "helm_release" "istiod" {
   repository = local.istio_helm_repo
   chart      = "istiod"
   wait       = true
-  values     = ["${file("./modules/helm/istio/example.values.yaml")}"]
+  values     = ["${file(var.helm_release_config.values_file_path)}"]
 
   depends_on = [
     helm_release.istio_base
   ]
 }
 
-resource "helm_release" "istio_ingress_gateway" {
-  name       = "istio-ingress"
+resource "helm_release" "istio_ingressgateway" {
+  name       = "istio-ingressgateway"
   namespace  = var.istio_ingress_namespace
   repository = local.istio_helm_repo
   chart      = "gateway"
@@ -38,3 +38,19 @@ resource "helm_release" "istio_ingress_gateway" {
     helm_release.istiod
   ]
 }
+
+# resource "kubernetes_manifest" "istio_gateway" {
+#   manifest = yamldecode(file("${path.module}/istio-gateway.yaml"))
+
+#   depends_on = [
+#     helm_release.istio_ingressgateway
+#   ]
+# }
+
+# resource "kubernetes_manifest" "grafana_virtual_service" {
+#   manifest = yamldecode(file("${path.module}/grafana-virtualservice.yaml"))
+
+#   depends_on = [
+#     kubernetes_manifest.istio_gateway
+#   ]
+# }

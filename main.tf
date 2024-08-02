@@ -1,7 +1,13 @@
 module "networking" {
   source                   = "./modules/networking"
   env                      = var.env
+  region                   = var.region
   cluster_name             = var.eks_cluster_name
+  vpc_cidr                 = var.vpc_cidr
+  route_cidr_range         = var.route_cidr_range
+  public_subnet_cidrs      = var.public_subnet_cidrs
+  private_subnet_cidrs     = var.private_subnet_cidrs
+  availability_zones       = var.availability_zones
   eks_security_group_rules = var.eks_security_group_rules
 }
 
@@ -115,6 +121,7 @@ module "helm_istio" {
   source                  = "./modules/helm/istio"
   istio_system_namespace  = module.k8s_namespace.istio_system_namespace
   istio_ingress_namespace = module.k8s_namespace.istio_ingress_namespace
+  helm_release_config     = var.helm_monitoring_stack_release_config
 
   depends_on = [
     module.eks,
@@ -126,6 +133,7 @@ module "helm_monitoring_stack" {
   source              = "./modules/helm/monitoring-stack"
   namespace           = module.k8s_namespace.monitoring_namespace
   helm_release_config = var.helm_monitoring_stack_release_config
+
   depends_on = [
     module.eks,
     module.k8s_namespace,
