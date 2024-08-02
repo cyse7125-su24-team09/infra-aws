@@ -8,6 +8,31 @@ variable "region" {
   description = "AWS Region Name"
 }
 
+variable "vpc_cidr" {
+  description = "CIDR block for the VPC"
+  type        = string
+}
+
+variable "public_subnet_cidrs" {
+  description = "List of CIDR blocks for public subnets"
+  type        = list(string)
+}
+
+variable "private_subnet_cidrs" {
+  description = "List of CIDR blocks for private subnets"
+  type        = list(string)
+}
+
+variable "route_cidr_range" {
+  description = "CIDR range for the route table"
+  type        = string
+}
+
+variable "availability_zones" {
+  description = "List of availability zones for subnets"
+  type        = list(string)
+}
+
 variable "eks_security_group_rules" {
   description = "Security group rules for the EKS cluster"
   type = object({
@@ -204,6 +229,13 @@ variable "github_token" {
   type        = string
 }
 
+variable "helm_istio_release_config" {
+  description = "Helm release configuration for bootstrapping istio"
+  type = object({
+    values_file_path = string
+  })
+}
+
 variable "helm_monitoring_stack_release_config" {
   description = "Helm release configuration for bootstrapping monitoring stack"
   type = object({
@@ -212,5 +244,4 @@ variable "helm_monitoring_stack_release_config" {
     chart            = string
     values_file_path = string
   })
-
 }

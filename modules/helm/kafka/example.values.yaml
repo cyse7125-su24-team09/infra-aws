@@ -3,15 +3,13 @@ fullnameOverride: cve-kafka
 sasl:
   client:
     users:
-      - your username
+      - archops_admin
     passwords:
-      - your password
+      - ArchOps@670951
 
 controller:
   replicaCount: 3
   podAntiAffinityPreset: soft
-  podLabels:
-    app: cve-kafka
   persistence:
     enabled: true
     size: 10Gi

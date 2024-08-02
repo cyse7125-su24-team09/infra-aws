@@ -13,15 +13,11 @@ resource "aws_internet_gateway" "infra_igw" {
   }
 }
 
-data "aws_availability_zones" "available" {
-  state = "available"
-}
-
 resource "aws_subnet" "public_subnet" {
   count                   = length(var.public_subnet_cidrs)
   vpc_id                  = aws_vpc.infra_vpc.id
   cidr_block              = var.public_subnet_cidrs[count.index]
-  availability_zone       = data.aws_availability_zones.available.names[count.index]
+  availability_zone       = var.availability_zones[count.index]
   map_public_ip_on_launch = true
   tags = {
     Name = "${var.env}-public-subnet-${count.index + 1}"
@@ -33,7 +29,7 @@ resource "aws_subnet" "private_subnet" {
   count             = length(var.public_subnet_cidrs)
   vpc_id            = aws_vpc.infra_vpc.id
   cidr_block        = var.private_subnet_cidrs[count.index]
-  availability_zone = data.aws_availability_zones.available.names[count.index]
+  availability_zone = var.availability_zones[count.index]
   tags = {
     Name = "${var.env}-private-subnet-${count.index + 1}"
   }

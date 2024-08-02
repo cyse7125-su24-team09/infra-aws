@@ -1,8 +1,8 @@
 fullnameOverride: cve-postgresql
 
 auth:
-  username: your username 
-  password: your password
+  username: archops_admin
+  password: ArchOps@670951
   database: cve
   
 primary:
@@ -25,28 +25,33 @@ primary:
       cpu: 0.5
       memory: 512Mi
 
-networkPolicy:
-  enabled: true
-  allowExternal: false
-  ingress:
-    - from:
+  networkPolicy:
+    enabled: true
+    allowExternal: false
+    extraIngress:
+      - from:
         - namespaceSelector:
             matchLabels:
-              "kubernetes.io/metadata.name": cve-consumer
-        - namespaceSelector:
-            matchLabels:
-              "kubernetes.io/metadata.name": monitoring
+              kubernetes.io/metadata.name: cve-consumer
         - podSelector:
             matchLabels:
               app: cve-consumer
+      - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
         - podSelector:
             matchLabels:
-              app: prometheus
-  
+              release: kube-prometheus-stack
+
 metrics:
   enabled: true
+  image:
+    repository: prometheuscommunity/postgres-exporter
+    tag: master
+    pullPolicy: IfNotPresent
   serviceMonitor:
     enabled: true
     namespace: monitoring
     labels:
-      release: kube-prometheus-stack  
+      release: kube-prometheus-stack

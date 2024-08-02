@@ -3,8 +3,8 @@ prometheus:
 
 grafana:
   enabled: true
-  adminUser: your_admin_user
-  adminPassword: your_admin_password
+  adminUser: admin
+  adminPassword: admin
 
   service:
     type: ClusterIP
@@ -44,6 +44,7 @@ grafana:
       kafka-overview:
         url: https://grafana.com/api/dashboards/12483/revisions/1/download
         datasource: prometheus
+
     postgresql:
       postgresql-overview:
         url: https://grafana.com/api/dashboards/9628/revisions/latest/download
@@ -51,10 +52,6 @@ grafana:
 
       postgresql-queries:
         url: https://grafana.com/api/dashboards/13105/revisions/latest/download
-        datasource: Prometheus
-
-      postgresql-database:
-        url: https://grafana.com/api/dashboards/13290/revisions/latest/download
         datasource: Prometheus
 
       postgresql-instance:
