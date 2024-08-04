@@ -32,7 +32,7 @@ resource "helm_release" "istio_ingressgateway" {
   namespace  = var.istio_ingress_namespace
   repository = local.istio_helm_repo
   chart      = "gateway"
-
+  values     = ["${file(var.helm_release_config.values_file_path)}"]
   depends_on = [
     helm_release.istio_base,
     helm_release.istiod

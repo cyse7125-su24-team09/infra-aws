@@ -1,12 +1,12 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: grafana-cert
+  name: grafana-cert-prod
   namespace: istio-ingress
 spec:
-  secretName: grafana-tls
+  secretName: grafana-tls-prod
   issuerRef:
-    name: letsencrypt-staging
+    name: letsencrypt-prod
     kind: ClusterIssuer
   commonName: grafana.pritesh-nimje.me
   dnsNames:

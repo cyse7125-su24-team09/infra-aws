@@ -15,7 +15,7 @@ spec:
         protocol: HTTPS
       tls:
         mode: SIMPLE
-        credentialName: grafana-tls
+        credentialName: grafana-tls-prod
       hosts:
         - "grafana.pritesh-nimje.me"
     - port:
