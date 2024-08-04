@@ -121,7 +121,7 @@ module "helm_istio" {
   source                  = "./modules/helm/istio"
   istio_system_namespace  = module.k8s_namespace.istio_system_namespace
   istio_ingress_namespace = module.k8s_namespace.istio_ingress_namespace
-  helm_release_config     = var.helm_monitoring_stack_release_config
+  helm_release_config     = var.helm_istio_release_config
 
   depends_on = [
     module.eks,
