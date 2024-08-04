@@ -51,7 +51,7 @@ module "eks" {
   ebs_kms_key_arn                 = module.kms.eks_ebs_kms_key_arn
   # autoscaler_namespace            = var.k8s_clusterAutoscaler_namespace
   service_account_name = var.autoscaler_service_account_name
-  hosted_zone_Id = var.dns_zone_id
+  hosted_zone_Id       = var.dns_zone_id
 }
 
 provider "kubernetes" {

@@ -119,5 +119,5 @@ variable "service_account_name" {
 variable "hosted_zone_Id" {
   type        = string
   description = "The Route53 Hosted Zone ID"
-  
+
 }
