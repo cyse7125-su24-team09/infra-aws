@@ -248,5 +248,5 @@ variable "helm_monitoring_stack_release_config" {
 variable "dns_zone_id" {
   description = "The Route53 Hosted Zone ID"
   type        = string
-  
+
 }
