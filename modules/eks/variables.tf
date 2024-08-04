@@ -115,3 +115,9 @@ variable "service_account_name" {
   type        = string
   description = "name of service account used in Helm chart"
 }
+
+variable "hosted_zone_Id" {
+  type        = string
+  description = "The Route53 Hosted Zone ID"
+  
+}
