@@ -1,4 +1,3 @@
-
 resource "helm_release" "cluster_autoscaler" {
   name      = var.helm_release_config.name
   namespace = "kube-system"

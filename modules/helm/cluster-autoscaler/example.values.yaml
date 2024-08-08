@@ -1,0 +1,92 @@
+replicaCount: 1
+fullnameOverride: cluster-autoscaler
+
+imagePullSecrets:
+    type: kubernetes.io/dockerconfigjson
+    name: regcred
+    dockerconfigjson: ewoiYXV0aHMiOnsKImh0dHBzOi8==
+
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+
+image:
+  repository: niteshmore22/eks-autoscaler
+  tag: latest
+  pullPolicy: Always
+
+rbac:
+  create: true
+  serviceAccount:
+    create: true
+    name: cluster-autoscaler-sa
+    annotations:
+      eks.amazonaws.com/role-arn: ""
+
+autoscalingGroups:
+  - name: ""
+    maxSize: 5
+    minSize: 1
+    desiredCapacity: 3
+
+cloudProvider: aws
+awsRegion: us-east-1
+
+extraArgs:
+  expander: least-waste
+  skip-nodes-with-local-storage: false
+  skip-nodes-with-system-pods: true
+  nodeGroupAutoDiscovery: asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/${var.cluster_name}
+  scaleDownEnabled: true
+  scaleDownUnneededTime: 10m
+  scaleDownDelayAfterAdd: 1m
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+
+pdb:
+  create: false
+  maxUnavailable: 1
+
+service:
+  type: ClusterIP
+  port: 8085
+
+resources: 
+  limits:
+    cpu: 100m
+    memory: 100Mi
+  requests:
+    cpu: 100m
+    memory: 100Mi
+
+metricsServer:
+  enabled: true
+  image:
+    repository: niteshmore22/metrics-server
+    tag: latest
+    pullPolicy: Always
+  rbac:
+    create: true
+  serviceAccount:
+    create: true
+    name: metrics-server
+  apiService:
+    create: true
+  resources: 
+    limits:
+      cpu: 100m
+      memory: 100Mi
+    requests:
+      cpu: 100m
+      memory: 100Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}

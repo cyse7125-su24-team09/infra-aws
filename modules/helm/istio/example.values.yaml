@@ -1,7 +1,7 @@
 global:
   proxy:
-    accessLogFile: "/dev/stdout"
-    accessLogEncoding: "JSON"
+    accessLogFile: /dev/stdout
+    accessLogEncoding: JSON
   logAsJson: true
   logging:
     level: "default:info"
@@ -10,6 +10,7 @@ meshConfig:
   defaultConfig:
     holdApplicationUntilProxyStarts: true
   accessLogFile: /dev/stdout
+  accessLogEncoding: JSON
   accessLogFormat: |
     {
       "protocol": "%PROTOCOL%",
@@ -38,21 +39,15 @@ meshConfig:
       "response_code_details": "%RESPONSE_CODE_DETAILS%"
     }
 
-# prometheus:
-#   enabled: true
-#   scrapeInterval: 60s
-#   serviceMonitor:
-#     enabled: true
-#   configOverride: {}
-#   nodeSelector:
-#     release: kube-prometheus-stack
-#   tolerations: []
+autoscaleEnabled: true
+autoscaleMin: 1
+autoscaleMax: 5
+autoscaleBehavior: {}
+cpu:
+  targetAverageUtilization: 80
+memory: {}
+  # targetAverageUtilization: 80
 
-telemetry:
-  v2:
-    enabled: true
-    prometheus:
-      enabled: true
-      filter: { }
-      scrape: true
-    accessLogging: true
+service:
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "grafana.pritesh-nimje.me"

@@ -39,6 +39,42 @@ kraft:
 zookeeper:
   enabled: false
 
+rbac:
+  create: true
+
+networkPolicy:
+  enabled: true
+  allowExternal: false
+  extraIngress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: cve-operator
+      - podSelector:
+          matchLabels:
+            app: cve-processor
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: cve-processor
+      - podSelector:
+          matchLabels:
+            app: cve-processor
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: cve-consumer
+      - podSelector:
+          matchLabels:
+            app: cve-consumer
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: monitoring
+      - podSelector:
+          matchLabels:
+            release: kube-prometheus-stack
+
 metrics:
   jmx:
     enabled: true
