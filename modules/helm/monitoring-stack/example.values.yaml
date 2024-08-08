@@ -49,11 +49,3 @@ grafana:
       postgresql-overview:
         url: https://grafana.com/api/dashboards/9628/revisions/latest/download
         datasource: Prometheus
-
-      postgresql-queries:
-        url: https://grafana.com/api/dashboards/13105/revisions/latest/download
-        datasource: Prometheus
-
-      postgresql-instance:
-        url: https://grafana.com/api/dashboards/11577/revisions/latest/download
-        datasource: Prometheus
