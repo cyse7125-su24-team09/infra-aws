@@ -1,0 +1,76 @@
+eck-elasticsearch:
+  auth:
+    roles:
+      - secretName: my-roles-secret    
+    fileRealm:
+      - secretName: my-filerealm-secret
+  nodeSets:
+    - name: masters
+      count: 1
+      volumeClaimTemplates:
+      - metadata:
+          name: elasticsearch-data
+        spec:
+          accessModes:
+          - ReadWriteOnce
+          resources:
+            requests:
+              storage: 10Gi
+          storageClassName: ebs-sc-elasticsearch 
+      
+      podTemplate:
+        spec:
+          containers:
+            - name: restore-sidecar
+              image: curlimages/curl:latest
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  ELASTIC_USERNAME=nitesh
+                  DOMAIN=elasticsearch-es-masters.elastic-stack.svc.cluster.local:9200
+                  ELASTIC_PASSWORD={desired password}
+                  echo "host is $DOMAIN"
+                  while true; do
+                    STATUS=$(curl -s -u $ELASTIC_USERNAME:$ELASTIC_PASSWORD -k GET "https://$DOMAIN/_cluster/health")
+                    if echo "$STATUS" | grep -q '"status":"yellow"\|"status":"green"'; then
+                      echo "Elasticsearch is ready"
+                      break
+                    else
+                      echo "Waiting for Elasticsearch to start... Current status: $(echo $STATUS | grep '"status":')"
+                      sleep 5
+                    fi
+                  done;
+
+                  RESPONSE_CODE=$(curl -s -u $ELASTIC_USERNAME:$ELASTIC_PASSWORD -k -o /dev/null -w "%{http_code}" "https://$DOMAIN/_cat/indices/cves?h=index")
+                  if [ "$RESPONSE_CODE" -eq 404 ]; then
+                    echo 'Index not found. Setting up snapshot repository and restoring data...';
+                    
+                    # Set up the snapshot repository
+                    REPO_RESPONSE_CODE=$(curl -s -u $ELASTIC_USERNAME:$ELASTIC_PASSWORD -k -o /dev/null -w "%{http_code}" -X PUT "https://$DOMAIN/_snapshot/my_s3_repository" -H 'Content-Type: application/json' -d \
+                    '{"type": "s3", "settings": {"bucket": "cve-elasticsearch-repository", "region": "us-east-1", "base_path": "elasticsearch-snapshots"}}')
+                    
+                    if [ "$REPO_RESPONSE_CODE" -eq 200 ]; then
+                      echo "Snapshot repository created successfully."
+                    else
+                      echo "Failed to create snapshot repository. HTTP status code: $REPO_RESPONSE_CODE"
+                      exit 1
+                    fi
+
+                    # Restore the snapshot
+                    RESTORE_RESPONSE_CODE=$(curl -s -u $ELASTIC_USERNAME:$ELASTIC_PASSWORD -k -o /dev/null -w "%{http_code}" -X POST "https://$DOMAIN/_snapshot/my_s3_repository/snapshot_cve2015/_restore" -H 'Content-Type: application/json' -d \
+                    '{"indices": "*"}')
+                    
+                    if [ "$RESTORE_RESPONSE_CODE" -eq 200 ]; then
+                      echo "Snapshot restored successfully."
+                    else
+                      echo "Failed to restore snapshot. HTTP status code: $RESTORE_RESPONSE_CODE"
+                      exit 1
+                    fi
+
+                  else
+                    echo 'Index exists. Skipping restore.';
+                  fi
+              securityContext:
+                runAsUser: 1000
+                runAsNonRoot: true
