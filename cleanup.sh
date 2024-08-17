@@ -10,6 +10,8 @@ helm uninstall cve-postgresql -n cve-consumer
 helm uninstall cve-operator -n cve-operator
 helm uninstall cve-processor -n cve-processor
 helm uninstall cve-consumer -n cve-consumer
+helm uninstall eck-elasticsearch -n elastic-stack
+helm uninstall eck-operator -n elastic-system
 
 terraform state rm module.k8s_namespace
 terraform state rm module.helm_istio

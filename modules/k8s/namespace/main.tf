@@ -69,3 +69,18 @@ resource "kubernetes_namespace" "llm_service" {
     name = "llm-service"
   }
 }
+
+
+resource "kubernetes_namespace" "eck" {
+  metadata {
+    name = "elastic-system"
+  }
+
+}
+
+resource "kubernetes_namespace" "eck_elasticsearch" {
+  metadata {
+    name = "elastic-stack"
+  }
+
+}

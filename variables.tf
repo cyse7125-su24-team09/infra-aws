@@ -278,3 +278,51 @@ variable "dns_zone_id" {
   type        = string
 
 }
+
+variable "k8s_ebs_storage_class_elasticsearch" {
+  description = "The k8s storage class configuration for EBS CSI driver"
+  type = object({
+    name                = string
+    storage_provisioner = string
+    reclaim_policy      = string
+    volume_binding_mode = string
+    parameters = object({
+      type      = string
+      fstype    = string
+      encrypted = string
+    })
+  })
+}
+
+variable "k8s_elasticsearch_namespace" {
+  description = "The k8s namespace to create in EKS cluster for elasticsearch"
+  type        = string
+
+}
+
+
+variable "helm_elasticsearch_release_config" {
+  description = "Helm release configuration for bootstrapping elasticsearch"
+  type = object({
+    name             = string
+    repository       = string
+    chart            = string
+    values_file_path = string
+  })
+}
+
+
+variable "helm_elasticsearch_secret" {
+  description = "Elasticsearch secret configuration"
+  type = object({
+    filerealm = object({
+      name        = string
+      users       = string
+      users_roles = string
+    })
+    roles = object({
+      name = string
+    })
+  })
+
+}

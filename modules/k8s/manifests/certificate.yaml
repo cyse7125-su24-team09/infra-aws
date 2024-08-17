@@ -8,6 +8,6 @@ spec:
   issuerRef:
     name: letsencrypt-staging
     kind: ClusterIssuer
-  commonName: grafana.pritesh-nimje.me
   dnsNames:
     - grafana.pritesh-nimje.me
+    - api.pritesh-nimje.me

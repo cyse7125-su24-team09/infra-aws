@@ -9,3 +9,7 @@ output "istio_ingress_namespace" {
 output "monitoring_namespace" {
   value = kubernetes_namespace.monitoring.metadata[0].name
 }
+
+output "eck_elasticsearch" {
+  value = kubernetes_namespace.eck_elasticsearch.metadata[0].name
+}
