@@ -130,6 +130,34 @@ variable "eks_node_group_max_unavailable" {
   type = number
 }
 
+variable "eks_gpu_node_group_ami_type" {
+  type = string
+}
+
+variable "eks_gpu_node_group_instance_types" {
+  type = list(string)
+}
+
+variable "eks_gpu_node_group_capacity_type" {
+  type = string
+}
+
+variable "eks_gpu_node_group_desired_size" {
+  type = number
+}
+
+variable "eks_gpu_node_group_min_size" {
+  type = number
+}
+
+variable "eks_gpu_node_group_max_size" {
+  type = number
+}
+
+variable "eks_gpu_node_group_max_unavailable" {
+  type = number
+}
+
 variable "k8s_webapp_processor_namespace" {
   description = "The k8s namespace to create in EKS cluster for cve processor webapp"
   type        = string

@@ -60,3 +60,12 @@ resource "kubernetes_namespace" "amazon_cloudwatch" {
     name = var.fluentbit_namespace
   }
 }
+
+resource "kubernetes_namespace" "llm_service" {
+  metadata {
+    labels = {
+      istio-injection = "enabled"
+    }
+    name = "llm-service"
+  }
+}

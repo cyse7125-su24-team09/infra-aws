@@ -85,6 +85,34 @@ module "eks" {
         AmazonEBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
       }
     }
+
+    gpu_nodes = {
+      cluster_name   = var.cluster_name
+      name           = "${var.cluster_name}-gpu-node-group"
+      ami_type       = var.gpu_node_group_ami_type
+      instance_types = var.gpu_node_group_instance_types
+      capacity_type  = var.gpu_node_group_capacity_type
+      desired_size   = var.gpu_node_group_desired_size
+      min_size       = var.gpu_node_group_min_size
+      max_size       = var.gpu_node_group_max_size
+      subnet_ids     = var.subnet_ids.private_subnets
+
+      update_config = {
+        max_unavailable = var.gpu_node_group_max_unavailable
+      }
+
+      taints = [{
+        key    = "nvidia.com/gpu"
+        value  = "true"
+        effect = "NO_SCHEDULE"
+      }]
+
+      create_iam_role = false
+      iam_role_arn    = var.node_group_role_arn
+      iam_role_additional_policies = {
+        AmazonEBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+      }
+    }
   }
 
   #  EKS K8s API cluster needs to be able to talk with the EKS worker nodes with port 15017/TCP and 15012/TCP which is used by Istio
