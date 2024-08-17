@@ -75,10 +75,10 @@ provider "kubernetes" {
 }
 
 module "k8s_storage" {
-  source            = "./modules/k8s/storage"
-  ebs_storage_class = var.k8s_ebs_storage_class
-  kms_key_arn       = module.kms.eks_ebs_kms_key_arn
-
+  source                          = "./modules/k8s/storage"
+  ebs_storage_class               = var.k8s_ebs_storage_class
+  kms_key_arn                     = module.kms.eks_ebs_kms_key_arn
+  ebs_storage_class_elasticsearch = var.k8s_ebs_storage_class_elasticsearch
   depends_on = [
     module.kms,
     module.eks
@@ -185,5 +185,20 @@ module "helm_fluentbit" {
     module.eks,
     module.k8s_namespace,
     module.helm_istio,
+  ]
+}
+
+module "helm_elasticsearch" {
+  source               = "./modules/helm/elasticsearch"
+  namespace            = module.k8s_namespace.eck_elasticsearch
+  helm_release_config  = var.helm_elasticsearch_release_config
+  elasticsearch_secret = var.helm_elasticsearch_secret
+
+  depends_on = [
+    module.eks,
+    module.k8s_namespace,
+    module.k8s_storage,
+    module.helm_istio,
+    module.helm_monitoring_stack
   ]
 }

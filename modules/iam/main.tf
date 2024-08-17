@@ -112,3 +112,8 @@ resource "aws_iam_role_policy_attachment" "external_dns_policy_attachment" {
   role       = aws_iam_role.eks_node_group_role.name
   policy_arn = aws_iam_policy.external_dns_policy.arn
 }
+
+resource "aws_iam_role_policy_attachment" "s3_policy_attachment" {
+  role       = aws_iam_role.eks_node_group_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+}
