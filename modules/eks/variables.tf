@@ -106,6 +106,34 @@ variable "node_group_max_unavailable" {
   type = number
 }
 
+variable "gpu_node_group_ami_type" {
+  type = string
+}
+
+variable "gpu_node_group_instance_types" {
+  type = list(string)
+}
+
+variable "gpu_node_group_capacity_type" {
+  type = string
+}
+
+variable "gpu_node_group_desired_size" {
+  type = number
+}
+
+variable "gpu_node_group_min_size" {
+  type = number
+}
+
+variable "gpu_node_group_max_size" {
+  type = number
+}
+
+variable "gpu_node_group_max_unavailable" {
+  type = number
+}
+
 # variable "autoscaler_namespace" {
 #   type        = string
 #   description = "namespace of the autoscaler"

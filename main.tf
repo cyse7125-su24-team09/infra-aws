@@ -45,6 +45,13 @@ module "eks" {
   node_group_max_size             = var.eks_node_group_max_size
   node_group_disk_size            = var.eks_node_group_disk_size
   node_group_max_unavailable      = var.eks_node_group_max_unavailable
+  gpu_node_group_ami_type         = var.eks_gpu_node_group_ami_type
+  gpu_node_group_instance_types   = var.eks_gpu_node_group_instance_types
+  gpu_node_group_capacity_type    = var.eks_gpu_node_group_capacity_type
+  gpu_node_group_desired_size     = var.eks_gpu_node_group_desired_size
+  gpu_node_group_min_size         = var.eks_gpu_node_group_min_size
+  gpu_node_group_max_size         = var.eks_gpu_node_group_max_size
+  gpu_node_group_max_unavailable  = var.eks_gpu_node_group_max_unavailable
   cluster_role_arn                = module.iam.eks_cluster_service_role_arn
   node_group_role_arn             = module.iam.eks_node_group_role_arn
   secrets_kms_key_arn             = module.kms.eks_secrets_kms_key_arn
