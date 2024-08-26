@@ -84,3 +84,13 @@ resource "kubernetes_namespace" "eck_elasticsearch" {
   }
 
 }
+resource "kubernetes_namespace" "llm_app" {
+
+  metadata {
+    labels = {
+      istio-injection = "enabled"
+    }
+    name = "llm-app"
+  }
+
+}
