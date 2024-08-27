@@ -273,10 +273,20 @@ variable "helm_monitoring_stack_release_config" {
     values_file_path = string
   })
 }
+
+variable "helm_tracing_release_config" {
+  description = "Helm release configuration for bootstrapping Jaeger tracing"
+  type = object({
+    name             = string
+    repository       = string
+    chart            = string
+    values_file_path = string
+  })
+}
+
 variable "dns_zone_id" {
   description = "The Route53 Hosted Zone ID"
   type        = string
-
 }
 
 variable "k8s_ebs_storage_class_elasticsearch" {
@@ -294,13 +304,6 @@ variable "k8s_ebs_storage_class_elasticsearch" {
   })
 }
 
-variable "k8s_elasticsearch_namespace" {
-  description = "The k8s namespace to create in EKS cluster for elasticsearch"
-  type        = string
-
-}
-
-
 variable "helm_elasticsearch_release_config" {
   description = "Helm release configuration for bootstrapping elasticsearch"
   type = object({
@@ -310,7 +313,6 @@ variable "helm_elasticsearch_release_config" {
     values_file_path = string
   })
 }
-
 
 variable "helm_elasticsearch_secret" {
   description = "Elasticsearch secret configuration"
@@ -324,5 +326,4 @@ variable "helm_elasticsearch_secret" {
       name = string
     })
   })
-
 }

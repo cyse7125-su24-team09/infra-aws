@@ -55,6 +55,12 @@ resource "kubernetes_namespace" "monitoring" {
   }
 }
 
+resource "kubernetes_namespace" "tracing" {
+  metadata {
+    name = "tracing"
+  }
+}
+
 resource "kubernetes_namespace" "amazon_cloudwatch" {
   metadata {
     name = var.fluentbit_namespace
@@ -71,26 +77,29 @@ resource "kubernetes_namespace" "llm_service" {
 }
 
 
-resource "kubernetes_namespace" "eck" {
+resource "kubernetes_namespace" "eck_system" {
   metadata {
+    labels = {
+      istio-injection = "enabled"
+    }
     name = "elastic-system"
   }
-
 }
 
-resource "kubernetes_namespace" "eck_elasticsearch" {
+resource "kubernetes_namespace" "eck_stack" {
   metadata {
+    labels = {
+      istio-injection = "enabled"
+    }
     name = "elastic-stack"
   }
-
 }
-resource "kubernetes_namespace" "llm_app" {
 
+resource "kubernetes_namespace" "llm_app" {
   metadata {
     labels = {
       istio-injection = "enabled"
     }
     name = "llm-app"
   }
-
 }

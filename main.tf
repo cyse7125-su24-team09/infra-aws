@@ -149,6 +149,17 @@ module "helm_monitoring_stack" {
   ]
 }
 
+module "helm_tracing" {
+  source              = "./modules/helm/tracing"
+  namespace           = module.k8s_namespace.tracing_namespace
+  helm_release_config = var.helm_tracing_release_config
+
+  depends_on = [
+    module.eks,
+    module.k8s_namespace,
+    module.helm_istio
+  ]
+}
 module "helm_kafka" {
   source              = "./modules/helm/kafka"
   namespace           = var.k8s_kafka_namespace
