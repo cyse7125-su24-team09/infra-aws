@@ -7,7 +7,19 @@ global:
     level: "default:info"
 
 meshConfig:
+  extensionProviders:
+    - name: zipkin
+      zipkin:
+        service: zipkin.istio-system.svc.cluster.local
+        port: 9411 
+  enableTracing: true
+  defaultProviders: 
+    tracing:
+      - zipkin    
   defaultConfig:
+    tracing:
+      zipkin:
+        address: zipkin.istio-system.svc.cluster.local:9411
     holdApplicationUntilProxyStarts: true
   accessLogFile: /dev/stdout
   accessLogEncoding: JSON
