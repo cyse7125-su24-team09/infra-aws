@@ -1,0 +1,10 @@
+provisionDataStore:
+  cassandra: false
+
+storage:
+  type: elasticsearch
+  elasticsearch: 
+    host: elasticsearch-es-masters.elastic-stack.svc.cluster.local
+    port: 9200
+    user: elasticsearch username
+    password: elasticsearch password

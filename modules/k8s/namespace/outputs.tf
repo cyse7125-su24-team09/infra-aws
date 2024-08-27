@@ -10,6 +10,10 @@ output "monitoring_namespace" {
   value = kubernetes_namespace.monitoring.metadata[0].name
 }
 
+output "tracing_namespace" {
+  value = kubernetes_namespace.tracing.metadata[0].name
+}
+
 output "eck_elasticsearch" {
-  value = kubernetes_namespace.eck_elasticsearch.metadata[0].name
+  value = kubernetes_namespace.eck_stack.metadata[0].name
 }
